@@ -59,7 +59,7 @@ services:
     image: ${BOTHUB_NLP_NLU_WORKER_ON_DEMAND_DOCKER_IMAGE_NAME:-ilha/bothub-nlp-nlu-worker-on-demand}:${BOTHUB_NLP_NLU_WORKER_ON_DEMAND_DOCKER_IMAGE_TAG:-latest}
     build:
       context: .
-      dockerfile: bothub-nlp-nlu-worker-on-demand/Dockerfile
+      dockerfile: Dockerfile
     ports:
       - 2658:2658
     depends_on:
