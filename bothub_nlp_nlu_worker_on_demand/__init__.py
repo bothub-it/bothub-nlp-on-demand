@@ -71,7 +71,7 @@ class MyUpWorker(UpWorker):
                 settings.BOTHUB_NLP_NLU_WORKER_DOCKER_IMAGE_NAME + f":{queue_language}",
                 [
                     "celery",
-                    "worker ",
+                    "worker",
                     "--autoscale",
                     "5,3",
                     "-O",
