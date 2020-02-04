@@ -45,5 +45,5 @@ BOTHUB_NLP_NLU_WORKER_ON_DEMAND_API_BASIC_AUTHORIZATION = config(
 )
 
 BOTHUB_SERVICE = get_service(
-    "bothub_nlp_nlu_worker_on_demand.services.docker.DockerService",
+    "bothub_nlp_nlu_worker_on_demand.services.kubernetes.KubernetesService",
 )

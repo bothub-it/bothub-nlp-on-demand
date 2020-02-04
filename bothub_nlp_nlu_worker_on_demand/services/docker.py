@@ -11,6 +11,7 @@ class DockerService(BaseBackend):
     def connect_service(self):
         self.client = docker.DockerClient(base_url=settings.BOTHUB_NLP_DOCKER_CLIENT_BASE_URL)
         self.label_key = "bothub-nlp-wod.name"
+        self.empty = "empty-value"
         return self.client
 
     def services_list_queue(self):

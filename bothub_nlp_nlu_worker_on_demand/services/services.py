@@ -11,7 +11,7 @@ class BaseBackend(object):
     def __init__(self):
         self.client = None
         self.label_key = None
-        self.empty = "empty-value"
+        self.empty = None
 
     @abstractmethod
     def connect_service(self):

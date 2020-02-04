@@ -37,6 +37,10 @@ running_services = {}
 last_services_lookup = 0
 
 
+settings.BOTHUB_SERVICE.apply_deploy(None, None, None)
+exit()
+
+
 def services_lookup():
     global running_services
     global last_services_lookup
@@ -56,7 +60,7 @@ class MyUpWorker(UpWorker):
             queue_language = (
                 self.queue.name.split(":")[1]
                 if ":" in self.queue.name
-                else self.queue.name
+                                                                       else self.queue.name
             )
             settings.BOTHUB_SERVICE.apply_deploy(queue_language, self.queue.name, ENV_LIST)
 

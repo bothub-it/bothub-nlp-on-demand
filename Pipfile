@@ -14,6 +14,7 @@ requests = "==2.20.1"
 docker = "==3.7.0"
 bothub_nlp_celery = {ref = "0.1.8",git = "https://github.com/bothub-it/bothub-nlp-celery"}
 redis = "*"
+kubernetes = "*"
 
 [dev-packages]
 "flake8" = "*"
