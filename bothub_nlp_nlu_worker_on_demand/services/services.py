@@ -12,6 +12,7 @@ class BaseBackend(object):
         self.client = None
         self.label_key = None
         self.empty = None
+        self.environments = None
 
     @abstractmethod
     def connect_service(self):
@@ -22,5 +23,9 @@ class BaseBackend(object):
         pass
 
     @abstractmethod
-    def apply_deploy(self, queue_language, queue_name, environments):
+    def apply_deploy(self, queue_language, queue_name):
+        pass
+
+    @abstractmethod
+    def remove_service(self, service):
         pass

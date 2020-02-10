@@ -11,34 +11,9 @@ from celery_worker_on_demand import APIHandler
 
 from . import settings
 
-
-LABEL_KEY = "bothub-nlp-wod.name"
-EMPTY = "empty-value"
-ENV_LIST = [
-    "{}={}".format(var, config(var, default=EMPTY))
-    for var in [
-        "ENVIRONMENT",
-        "SUPPORTED_LANGUAGES",
-        "BOTHUB_ENGINE_URL",
-        "BOTHUB_NLP_CELERY_SENTRY_CLIENT",
-        "BOTHUB_NLP_CELERY_SENTRY",
-        "BOTHUB_NLP_CELERY_BROKER_URL",
-        "BOTHUB_NLP_CELERY_BACKEND_URL",
-        "BOTHUB_NLP_NLU_AGROUP_LANGUAGE_QUEUE",
-        "BOTHUB_NLP_AWS_S3_BUCKET_NAME",
-        "BOTHUB_NLP_AWS_ACCESS_KEY_ID",
-        "BOTHUB_NLP_AWS_SECRET_ACCESS_KEY",
-        "BOTHUB_NLP_AWS_REGION_NAME",
-    ]
-]
-
 docker_client = settings.BOTHUB_SERVICE.connect_service()
 running_services = {}
 last_services_lookup = 0
-
-
-settings.BOTHUB_SERVICE.apply_deploy(None, None, None)
-exit()
 
 
 def services_lookup():
@@ -60,9 +35,9 @@ class MyUpWorker(UpWorker):
             queue_language = (
                 self.queue.name.split(":")[1]
                 if ":" in self.queue.name
-                                                                       else self.queue.name
+                else self.queue.name
             )
-            settings.BOTHUB_SERVICE.apply_deploy(queue_language, self.queue.name, ENV_LIST)
+            settings.BOTHUB_SERVICE.apply_deploy(queue_language, self.queue.name)
 
         while not self.queue.has_worker:
             sleep(1)
@@ -73,8 +48,9 @@ class MyDownWorker(DownWorker):
         global running_services
         services_lookup()
         service = running_services.get(self.queue.name)
-        service.remove()
-        running_services[self.queue.name] = None
+        if service:
+            settings.BOTHUB_SERVICE.remove_service(service)
+            running_services[self.queue.name] = None
 
 
 class MyAgent(Agent):

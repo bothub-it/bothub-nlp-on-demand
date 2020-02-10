@@ -1,30 +1,28 @@
 kind: Deployment
 apiVersion: apps/v1
 metadata:
-  name: bothub-nlp-nlu-worker-staging
+  name: bothub-nlp-nlu-worker-pt-br-staging
   namespace: bothub
   labels:
-    k8s-app: bothub-nlp-nlu-worker
+    k8s-app: bothub-nlp-nlu-worker-pt-br
 spec:
   replicas: 1
   revisionHistoryLimit: 3
   selector:
     matchLabels:
-      tier: backend
+      bothub-nlp-wod: pt_br
       track: staging
-      k8s-app: bothub-nlp-nlu-worker
-      version-nr: pt_br
+      k8s-app: bothub-nlp-nlu-worker-pt-br
   template:
     metadata:
       labels:
-        tier: backend
+        bothub-nlp-wod: pt_br
         track: staging
-        k8s-app: bothub-nlp-nlu-worker
-        name: bothub-nlp-nlu-worker
-        version-nr: pt_br
+        k8s-app: bothub-nlp-nlu-worker-pt-br
+        name: bothub-nlp-nlu-worker-pt-br
     spec:
       containers:
-      - name: bothub-nlp-nlu-worker
+      - name: bothub-nlp-nlu-worker-pt-br
         image: "452158872079.dkr.ecr.eu-west-1.amazonaws.com/bothub-nlp-nlu-worker:pt_br"
         command:
           - "celery"
