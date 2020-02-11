@@ -9,6 +9,11 @@ def get_service(path):
     return locate(path)()
 
 
+SERVICE_OPTIONS = {
+    "docker": "bothub_nlp_nlu_worker_on_demand.services.docker.DockerService",
+    "kubernetes": "bothub_nlp_nlu_worker_on_demand.services.kubernetes.KubernetesService",
+}
+
 BOTHUB_NLP_DOCKER_CLIENT_BASE_URL = config(
     "BOTHUB_NLP_DOCKER_CLIENT_BASE_URL", default="unix://var/run/docker.sock"
 )
@@ -45,5 +50,10 @@ BOTHUB_NLP_NLU_WORKER_ON_DEMAND_API_BASIC_AUTHORIZATION = config(
 )
 
 BOTHUB_SERVICE = get_service(
-    "bothub_nlp_nlu_worker_on_demand.services.kubernetes.KubernetesService"
+    path=config(
+        "BOTHUB_SERVICE",
+        cast=lambda value: SERVICE_OPTIONS.get(
+            value, "bothub_nlp_nlu_worker_on_demand.services.docker.DockerService"
+        ),
+    )
 )

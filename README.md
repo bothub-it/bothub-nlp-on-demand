@@ -60,6 +60,11 @@ You can set environment variables in your OS, write on ```.env``` file or pass v
 | BOTHUB_NLP_AWS_ACCESS_KEY_ID | `str` |  |  |
 | BOTHUB_NLP_AWS_SECRET_ACCESS_KEY | `str` |  |  |
 | BOTHUB_NLP_AWS_REGION_NAME | `str` |  |  |
+| AWS_CLI | `boolean` | `True` | Enable install AWS CLI |
+| AWS_ACCESS_KEY_ID | `str` | `None` | Key AWS ACCESS KEY ID |
+| AWS_SECRET_ACCESS_KEY | `str` | `None` | Key AWS SECRET KEY |
+| AWS_DEFAULT_REGION | `str` | `None` | DEFAULT REGION AWS |
+| BOTHUB_SERVICE | `str` | `docker` | Choose `kubernetes` or `docker` to boot on demand |
 
 ## Docker Arguments
 
