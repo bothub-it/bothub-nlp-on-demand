@@ -138,10 +138,10 @@ class KubernetesService(BaseBackend):
 
     def remove_service(self, service):
         k8s_apps_v1 = client.AppsV1Api()
-        api_response = k8s_apps_v1.delete_namespaced_deployment(
+        k8s_apps_v1.delete_namespaced_deployment(
             name=service.metadata.name,
             namespace=service.metadata.namespace,
             body=client.V1DeleteOptions(
-                propagation_policy="Foreground", grace_period_seconds=5
+                propagation_policy="Foreground", grace_period_seconds=0
             ),
         )
