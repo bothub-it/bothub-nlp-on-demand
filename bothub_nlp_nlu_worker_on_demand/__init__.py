@@ -11,7 +11,6 @@ from celery_worker_on_demand import APIHandler
 
 from . import settings
 
-docker_client = settings.BOTHUB_SERVICE.connect_service()
 running_services = {}
 last_services_lookup = 0
 
@@ -21,6 +20,7 @@ def services_lookup():
     global last_services_lookup
     if (time() - last_services_lookup) < 5:
         return False
+    settings.BOTHUB_SERVICE.connect_service()
     running_services = settings.BOTHUB_SERVICE.services_list_queue()
     last_services_lookup = time()
     return True
@@ -37,6 +37,7 @@ class MyUpWorker(UpWorker):
                 if ":" in self.queue.name
                 else self.queue.name
             )
+            settings.BOTHUB_SERVICE.connect_service()
             settings.BOTHUB_SERVICE.apply_deploy(queue_language, self.queue.name)
 
         while not self.queue.has_worker:
@@ -49,6 +50,7 @@ class MyDownWorker(DownWorker):
         services_lookup()
         service = running_services.get(self.queue.name)
         if service:
+            settings.BOTHUB_SERVICE.connect_service()
             settings.BOTHUB_SERVICE.remove_service(service)
             running_services[self.queue.name] = None
 
