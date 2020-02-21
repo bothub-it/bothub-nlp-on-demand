@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "2262b9a8b22af65f9fc85811a2f2bc181130d07a10597ce4845caf8e04935f65"
+            "sha256": "099630463d5f9764628bb3706e53737459760c4f85a23297bb624129501de176"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -18,7 +18,7 @@
     "default": {
         "bothub-nlp-celery": {
             "git": "https://github.com/bothub-it/bothub-nlp-celery",
-            "ref": "8fda54b03ccce0aa1db26e2a6053ca48aafe82d5"
+            "ref": "342e4006ef4d993e161493f32a31337a08aa2a71"
         },
         "cachetools": {
             "hashes": [
@@ -62,10 +62,10 @@
         },
         "google-auth": {
             "hashes": [
-                "sha256:44549e69ac39acf41fdf47f3f39a06e4e68378476806760d94a2c6a361b2bb06",
-                "sha256:b2d83edc02a9deeed9b1b839046671fd9eda223d21bd2dd50051559787032fd8"
+                "sha256:1ee22e22f35d6e00f068d7b3999b2ce24ecb5d0dcbd485aa6896d2b83c8907d6",
+                "sha256:28a848d47c55075a0f29d7e26b7a213515c137ab8f0670e546e46d1277060e47"
             ],
-            "version": "==1.11.0"
+            "version": "==1.11.2"
         },
         "idna": {
             "hashes": [
