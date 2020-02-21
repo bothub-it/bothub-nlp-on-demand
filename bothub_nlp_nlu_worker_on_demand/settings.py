@@ -1,5 +1,18 @@
+from pydoc import locate
 from decouple import config
 
+
+def get_service(path):
+    """
+    Path Example: bothub_nlp_nlu_worker_on_demand.services.docker.DockerService
+    """
+    return locate(path)()
+
+
+SERVICE_OPTIONS = {
+    "docker": "bothub_nlp_nlu_worker_on_demand.services.docker.DockerService",
+    "kubernetes": "bothub_nlp_nlu_worker_on_demand.services.kubernetes.KubernetesService",
+}
 
 BOTHUB_NLP_DOCKER_CLIENT_BASE_URL = config(
     "BOTHUB_NLP_DOCKER_CLIENT_BASE_URL", default="unix://var/run/docker.sock"
@@ -34,4 +47,13 @@ BOTHUB_NLP_NLU_WORKER_ON_DEMAND_CONFIG_FILE = config(
 
 BOTHUB_NLP_NLU_WORKER_ON_DEMAND_API_BASIC_AUTHORIZATION = config(
     "BOTHUB_NLP_NLU_WORKER_ON_DEMAND_API_BASIC_AUTHORIZATION", default=None
+)
+
+BOTHUB_SERVICE = get_service(
+    path=config(
+        "BOTHUB_SERVICE",
+        cast=lambda value: SERVICE_OPTIONS.get(
+            value, "bothub_nlp_nlu_worker_on_demand.services.docker.DockerService"
+        ),
+    )
 )
