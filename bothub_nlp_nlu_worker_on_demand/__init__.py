@@ -1,4 +1,3 @@
-import docker
 import configparser
 import cgi
 
@@ -12,28 +11,6 @@ from celery_worker_on_demand import APIHandler
 
 from . import settings
 
-
-LABEL_KEY = "bothub-nlp-wod.name"
-EMPTY = "empty-value"
-ENV_LIST = [
-    "{}={}".format(var, config(var, default=EMPTY))
-    for var in [
-        "ENVIRONMENT",
-        "SUPPORTED_LANGUAGES",
-        "BOTHUB_ENGINE_URL",
-        "BOTHUB_NLP_CELERY_SENTRY_CLIENT",
-        "BOTHUB_NLP_CELERY_SENTRY",
-        "BOTHUB_NLP_CELERY_BROKER_URL",
-        "BOTHUB_NLP_CELERY_BACKEND_URL",
-        "BOTHUB_NLP_NLU_AGROUP_LANGUAGE_QUEUE",
-        "BOTHUB_NLP_AWS_S3_BUCKET_NAME",
-        "BOTHUB_NLP_AWS_ACCESS_KEY_ID",
-        "BOTHUB_NLP_AWS_SECRET_ACCESS_KEY",
-        "BOTHUB_NLP_AWS_REGION_NAME",
-    ]
-]
-
-docker_client = docker.DockerClient(base_url=settings.BOTHUB_NLP_DOCKER_CLIENT_BASE_URL)
 running_services = {}
 last_services_lookup = 0
 
@@ -43,12 +20,8 @@ def services_lookup():
     global last_services_lookup
     if (time() - last_services_lookup) < 5:
         return False
-    running_services = {}
-    for service in docker_client.services.list():
-        service_labels = service.attrs.get("Spec", {}).get("Labels")
-        if LABEL_KEY in service_labels:
-            queue_name = service_labels.get(LABEL_KEY)
-            running_services[queue_name] = service
+    settings.BOTHUB_SERVICE.connect_service()
+    running_services = settings.BOTHUB_SERVICE.services_list_queue()
     last_services_lookup = time()
     return True
 
@@ -64,39 +37,9 @@ class MyUpWorker(UpWorker):
                 if ":" in self.queue.name
                 else self.queue.name
             )
-            constraints = []
-            if settings.BOTHUB_NLP_NLU_WORKER_ON_DEMAND_RUN_IN_WORKER_NODE:
-                constraints.append("node.role == worker")
-            docker_client.services.create(
-                settings.BOTHUB_NLP_NLU_WORKER_DOCKER_IMAGE_NAME + f":{queue_language}",
-                [
-                    "celery",
-                    "worker",
-                    "--autoscale",
-                    "5,3",
-                    "-O",
-                    "fair",
-                    "--workdir",
-                    "bothub_nlp_nlu_worker",
-                    "-A",
-                    "celery_app",
-                    "-c",
-                    "1",
-                    "-l",
-                    "INFO",
-                    "-E",
-                    "-Q",
-                    self.queue.name,
-                ],
-                env=list(
-                    list(filter(lambda v: not v.endswith(EMPTY), ENV_LIST)) +
-                    list([f'BOTHUB_NLP_LANGUAGE_QUEUE={self.queue.name}']) +
-                    list(['BOTHUB_NLP_SERVICE_WORKER=true'])
-                ),
-                labels={LABEL_KEY: self.queue.name},
-                networks=settings.BOTHUB_NLP_NLU_WORKER_ON_DEMAND_NETWORKS,
-                constraints=constraints,
-            )
+            settings.BOTHUB_SERVICE.connect_service()
+            settings.BOTHUB_SERVICE.apply_deploy(queue_language, self.queue.name)
+
         while not self.queue.has_worker:
             sleep(1)
 
@@ -106,8 +49,10 @@ class MyDownWorker(DownWorker):
         global running_services
         services_lookup()
         service = running_services.get(self.queue.name)
-        service.remove()
-        running_services[self.queue.name] = None
+        if service:
+            settings.BOTHUB_SERVICE.connect_service()
+            settings.BOTHUB_SERVICE.remove_service(service)
+            running_services[self.queue.name] = None
 
 
 class MyAgent(Agent):
