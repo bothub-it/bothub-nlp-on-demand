@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "099630463d5f9764628bb3706e53737459760c4f85a23297bb624129501de176"
+            "sha256": "c0a9c984ec1ac8ebc2883ed1c36eb29974dcb0b3a77d343eef5b60a853c830bb"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -18,7 +18,7 @@
     "default": {
         "bothub-nlp-celery": {
             "git": "https://github.com/bothub-it/bothub-nlp-celery",
-            "ref": "342e4006ef4d993e161493f32a31337a08aa2a71"
+            "ref": "ca814af2408f3f11530e38412fadd3ae1b203768"
         },
         "cachetools": {
             "hashes": [
