@@ -31,8 +31,8 @@ spec:
           - "5,3"
           - "-O"
           - "fair"
-          - "--workdir",
-          - "bothub_nlp_nlu_worker",
+          - "--workdir"
+          - "bothub_nlp_nlu_worker"
           - "-A"
           - "celery_app"
           - "-c"
