@@ -31,8 +31,10 @@ spec:
           - "5,3"
           - "-O"
           - "fair"
+          - "--workdir",
+          - "bothub_nlp_nlu_worker",
           - "-A"
-          - "bothub_nlp_nlu_worker.celery_app"
+          - "celery_app"
           - "-c"
           - "1"
           - "-l"
@@ -42,7 +44,7 @@ spec:
           - "pt_br"
         env:
             - name: BOTHUB_ENGINE_URL
-              value: 'https://api.staging.bothub.it'
+              value: 'https://api.ilhasoft.dev'
             - name: BOTHUB_NLP_CELERY_BACKEND_URL
               value: 'redis://redis-master.redis.svc.cluster.local:6379/9'
             - name: BOTHUB_NLP_CELERY_BROKER_URL
@@ -52,7 +54,7 @@ spec:
             - name: ENVIRONMENT
               value: 'staging'
             - name: SUPPORTED_LANGUAGES
-              value: 'en:en_core_web_lg|pt_br:pip+pt_nilc_word2vec_cbow_600:https://s3.amazonaws.com/bothub-models/spacy-2.1.9/pt_nilc_word2vec_cbow_600-1.0.0.zip'
+              value: 'en:en_core_web_lg|pt'
             - name: BOTHUB_NLP_LANGUAGE_QUEUE
               value: 'pt_br'
             - name: BOTHUB_NLP_SERVICE_WORKER
