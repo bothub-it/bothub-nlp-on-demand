@@ -59,13 +59,6 @@ spec:
               value: 'pt_br'
             - name: BOTHUB_NLP_SERVICE_WORKER
               value: 'true'
-        resources:
-          limits:
-            cpu: '4.0'
-            memory: '7680Mi'
-          requests:
-            cpu: '1.0'
-            memory: '1024Mi'
       tolerations:
         - key: "bothubpod"
           operator: "Equal"
