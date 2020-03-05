@@ -82,8 +82,7 @@ class KubernetesService(BaseBackend):
                 )
                 container.update(
                     {
-                        "image": settings.BOTHUB_NLP_NLU_WORKER_DOCKER_IMAGE_NAME
-                        + f":{queue_language}"
+                        "image": f"{settings.BOTHUB_NLP_NLU_WORKER_DOCKER_IMAGE_NAME}:{queue_language}"
                     }
                 )
                 container.update(
@@ -95,8 +94,10 @@ class KubernetesService(BaseBackend):
                             "5,3",
                             "-O",
                             "fair",
+                            "--workdir",
+                            "bothub_nlp_nlu_worker",
                             "-A",
-                            "bothub_nlp_nlu_worker.celery_app",
+                            "celery_app",
                             "-c",
                             "1",
                             "-l",

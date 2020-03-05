@@ -23,7 +23,7 @@ BOTHUB_NLP_NLU_WORKER_ON_DEMAND_API_PORT = config(
 )
 
 BOTHUB_NLP_NLU_WORKER_DOCKER_IMAGE_NAME = config(
-    "BOTHUB_NLP_NLU_WORKER_DOCKER_IMAGE_NAME", default="ilha/bothub-nlp-nlu-worker"
+    "BOTHUB_NLP_NLU_WORKER_DOCKER_IMAGE_NAME", default="bothubit/bothub-nlp"
 )
 
 BOTHUB_NLP_NLU_WORKER_ON_DEMAND_DOWN_TIME = config(
