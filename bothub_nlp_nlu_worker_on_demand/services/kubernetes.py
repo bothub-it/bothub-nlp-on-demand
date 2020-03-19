@@ -33,6 +33,7 @@ class KubernetesService(BaseBackend):
                 "BOTHUB_NLP_AWS_ACCESS_KEY_ID",
                 "BOTHUB_NLP_AWS_SECRET_ACCESS_KEY",
                 "BOTHUB_NLP_AWS_REGION_NAME",
+                "BOTHUB_K8S_TOLERATION_KEY",
             ]
         ]
         return self.client
