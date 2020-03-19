@@ -144,12 +144,16 @@ class KubernetesService(BaseBackend):
                     }
                 )
 
-            dep["spec"]["template"]["spec"]["tolerations"] = {
-                "key": settings.BOTHUB_K8S_TOLERATION_KEY,
-                "operator": "Equal",
-                "value": "false",
-                "effect": "NoExecute",
-            }
+            dep["spec"]["template"]["spec"]["tolerations"] = list(
+                [
+                    {
+                        "key": settings.BOTHUB_K8S_TOLERATION_KEY,
+                        "operator": "Equal",
+                        "value": "false",
+                        "effect": "NoExecute",
+                    }
+                ]
+            )
 
             k8s_apps_v1 = client.AppsV1Api()
             k8s_apps_v1.create_namespaced_deployment(body=dep, namespace="bothub")
