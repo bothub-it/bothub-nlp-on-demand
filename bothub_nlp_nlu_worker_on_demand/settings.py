@@ -59,3 +59,6 @@ BOTHUB_SERVICE = get_service(
 )
 
 BOTHUB_ENVIRONMENT = config("ENVIRONMENT", default="production")
+BOTHUB_K8S_TOLERATION_KEY = config(
+    "BOTHUB_K8S_TOLERATION_KEY", default="bothubmemorypod"
+)

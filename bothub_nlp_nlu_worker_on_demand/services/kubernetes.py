@@ -143,8 +143,14 @@ class KubernetesService(BaseBackend):
                     }
                 )
 
-            k8s_apps_v1 = client.AppsV1Api()
+            dep["spec"]["template"]["spec"]["tolerations"] = {
+                "key": settings.BOTHUB_K8S_TOLERATION_KEY,
+                "operator": "Equal",
+                "value": "false",
+                "effect": "NoExecute",
+            }
 
+            k8s_apps_v1 = client.AppsV1Api()
             k8s_apps_v1.create_namespaced_deployment(body=dep, namespace="bothub")
 
     def remove_service(self, service):
