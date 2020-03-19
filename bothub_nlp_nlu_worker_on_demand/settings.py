@@ -57,3 +57,5 @@ BOTHUB_SERVICE = get_service(
         ),
     )
 )
+
+BOTHUB_ENVIRONMENT = config("ENVIRONMENT", default="production")

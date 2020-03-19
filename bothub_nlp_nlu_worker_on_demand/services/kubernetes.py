@@ -45,7 +45,11 @@ class KubernetesService(BaseBackend):
         for service in k8s_apps_v1.list_namespaced_deployment("bothub").items:
             service_labels = service.spec.template.metadata.labels
 
-            if self.label_key in service_labels:
+            if (
+                self.label_key in service_labels
+                and "track" in service_labels
+                and service_labels.get("track") == settings.BOTHUB_ENVIRONMENT
+            ):
                 queue_name = service_labels.get(self.label_key)
                 running_services[queue_name] = service
         return running_services
