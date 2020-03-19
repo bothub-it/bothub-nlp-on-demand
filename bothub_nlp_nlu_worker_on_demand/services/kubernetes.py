@@ -59,17 +59,23 @@ class KubernetesService(BaseBackend):
             dep = yaml.safe_load(f)
             dep["metadata"][
                 "name"
-            ] = f"bothub-nlp-nlu-worker-{queue_language.replace('pt_br', 'pt-br')}-staging"
+            ] = f"bothub-nlp-nlu-worker-{queue_language.replace('pt_br', 'pt-br')}-{settings.BOTHUB_ENVIRONMENT}"
             dep["metadata"]["labels"][
                 "k8s-app"
             ] = f"bothub-nlp-nlu-worker-{queue_language.replace('pt_br', 'pt-br')}"
             dep["spec"]["selector"]["matchLabels"]["bothub-nlp-wod"] = queue_language
+            dep["spec"]["selector"]["matchLabels"][
+                "track"
+            ] = settings.BOTHUB_ENVIRONMENT
             dep["spec"]["selector"]["matchLabels"][
                 "k8s-app"
             ] = f"bothub-nlp-nlu-worker-{queue_language.replace('pt_br', 'pt-br')}"
             dep["spec"]["template"]["metadata"]["labels"][
                 "bothub-nlp-wod"
             ] = queue_language
+            dep["spec"]["template"]["metadata"]["labels"][
+                "track"
+            ] = settings.BOTHUB_ENVIRONMENT
             dep["spec"]["template"]["metadata"]["labels"][
                 "k8s-app"
             ] = f"bothub-nlp-nlu-worker-{queue_language.replace('pt_br', 'pt-br')}"
