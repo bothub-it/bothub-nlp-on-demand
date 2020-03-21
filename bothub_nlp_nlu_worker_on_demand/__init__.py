@@ -2,7 +2,6 @@ import configparser
 import cgi
 
 from time import sleep, time
-from decouple import config
 from celery_worker_on_demand import CeleryWorkerOnDemand
 from celery_worker_on_demand import Agent
 from celery_worker_on_demand import UpWorker

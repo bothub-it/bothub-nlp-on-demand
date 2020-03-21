@@ -63,6 +63,7 @@ You can set environment variables in your OS, write on ```.env``` file or pass v
 | AWS_SECRET_ACCESS_KEY | `str` | `None` | Key AWS SECRET KEY |
 | AWS_DEFAULT_REGION | `str` | `None` | DEFAULT REGION AWS |
 | BOTHUB_SERVICE | `str` | `docker` | Choose `kubernetes` or `docker` to boot on demand |
+| ENVIRONMENT | `str` | `production` | Choose `production` or `staging` |
 
 ## Docker Arguments
 

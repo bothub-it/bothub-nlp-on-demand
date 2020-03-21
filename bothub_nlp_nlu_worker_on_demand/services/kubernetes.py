@@ -33,6 +33,7 @@ class KubernetesService(BaseBackend):
                 "BOTHUB_NLP_AWS_ACCESS_KEY_ID",
                 "BOTHUB_NLP_AWS_SECRET_ACCESS_KEY",
                 "BOTHUB_NLP_AWS_REGION_NAME",
+                "BOTHUB_K8S_TOLERATION_KEY",
             ]
         ]
         return self.client
@@ -45,7 +46,11 @@ class KubernetesService(BaseBackend):
         for service in k8s_apps_v1.list_namespaced_deployment("bothub").items:
             service_labels = service.spec.template.metadata.labels
 
-            if self.label_key in service_labels:
+            if (
+                self.label_key in service_labels
+                and "track" in service_labels
+                and service_labels.get("track") == settings.BOTHUB_ENVIRONMENT
+            ):
                 queue_name = service_labels.get(self.label_key)
                 running_services[queue_name] = service
         return running_services
@@ -55,17 +60,23 @@ class KubernetesService(BaseBackend):
             dep = yaml.safe_load(f)
             dep["metadata"][
                 "name"
-            ] = f"bothub-nlp-nlu-worker-{queue_language.replace('pt_br', 'pt-br')}-staging"
+            ] = f"bothub-nlp-nlu-worker-{queue_language.replace('pt_br', 'pt-br')}-{settings.BOTHUB_ENVIRONMENT}"
             dep["metadata"]["labels"][
                 "k8s-app"
             ] = f"bothub-nlp-nlu-worker-{queue_language.replace('pt_br', 'pt-br')}"
             dep["spec"]["selector"]["matchLabels"]["bothub-nlp-wod"] = queue_language
+            dep["spec"]["selector"]["matchLabels"][
+                "track"
+            ] = settings.BOTHUB_ENVIRONMENT
             dep["spec"]["selector"]["matchLabels"][
                 "k8s-app"
             ] = f"bothub-nlp-nlu-worker-{queue_language.replace('pt_br', 'pt-br')}"
             dep["spec"]["template"]["metadata"]["labels"][
                 "bothub-nlp-wod"
             ] = queue_language
+            dep["spec"]["template"]["metadata"]["labels"][
+                "track"
+            ] = settings.BOTHUB_ENVIRONMENT
             dep["spec"]["template"]["metadata"]["labels"][
                 "k8s-app"
             ] = f"bothub-nlp-nlu-worker-{queue_language.replace('pt_br', 'pt-br')}"
@@ -82,8 +93,7 @@ class KubernetesService(BaseBackend):
                 )
                 container.update(
                     {
-                        "image": settings.BOTHUB_NLP_NLU_WORKER_DOCKER_IMAGE_NAME
-                        + f":{queue_language}"
+                        "image": f"{settings.BOTHUB_NLP_NLU_WORKER_DOCKER_IMAGE_NAME}:{queue_language}"
                     }
                 )
                 container.update(
@@ -95,8 +105,10 @@ class KubernetesService(BaseBackend):
                             "5,3",
                             "-O",
                             "fair",
+                            "--workdir",
+                            "bothub_nlp_nlu_worker",
                             "-A",
-                            "bothub_nlp_nlu_worker.celery_app",
+                            "celery_app",
                             "-c",
                             "1",
                             "-l",
@@ -132,8 +144,18 @@ class KubernetesService(BaseBackend):
                     }
                 )
 
-            k8s_apps_v1 = client.AppsV1Api()
+            dep["spec"]["template"]["spec"]["tolerations"] = list(
+                [
+                    {
+                        "key": settings.BOTHUB_K8S_TOLERATION_KEY,
+                        "operator": "Equal",
+                        "value": "false",
+                        "effect": "NoExecute",
+                    }
+                ]
+            )
 
+            k8s_apps_v1 = client.AppsV1Api()
             k8s_apps_v1.create_namespaced_deployment(body=dep, namespace="bothub")
 
     def remove_service(self, service):

@@ -23,7 +23,7 @@ BOTHUB_NLP_NLU_WORKER_ON_DEMAND_API_PORT = config(
 )
 
 BOTHUB_NLP_NLU_WORKER_DOCKER_IMAGE_NAME = config(
-    "BOTHUB_NLP_NLU_WORKER_DOCKER_IMAGE_NAME", default="ilha/bothub-nlp-nlu-worker"
+    "BOTHUB_NLP_NLU_WORKER_DOCKER_IMAGE_NAME", default="bothubit/bothub-nlp"
 )
 
 BOTHUB_NLP_NLU_WORKER_ON_DEMAND_DOWN_TIME = config(
@@ -56,4 +56,9 @@ BOTHUB_SERVICE = get_service(
             value, "bothub_nlp_nlu_worker_on_demand.services.docker.DockerService"
         ),
     )
+)
+
+BOTHUB_ENVIRONMENT = config("ENVIRONMENT", default="production")
+BOTHUB_K8S_TOLERATION_KEY = config(
+    "BOTHUB_K8S_TOLERATION_KEY", default="bothubmemorypod"
 )
