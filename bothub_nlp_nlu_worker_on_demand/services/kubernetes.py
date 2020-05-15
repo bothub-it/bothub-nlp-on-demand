@@ -93,7 +93,7 @@ class KubernetesService(BaseBackend):
                 )
                 container.update(
                     {
-                        "image": f"{settings.BOTHUB_NLP_NLU_WORKER_DOCKER_IMAGE_NAME}:{settings.BOTHUB_ENVIRONMENT}-{settings.BOTHUB_NLU_VERSION}-{queue_language}"
+                        "image": f"{settings.BOTHUB_NLP_NLU_WORKER_DOCKER_IMAGE_NAME}:{settings.BOTHUB_NLU_VERSION}-{queue_language}"
                     }
                 )
                 container.update(
