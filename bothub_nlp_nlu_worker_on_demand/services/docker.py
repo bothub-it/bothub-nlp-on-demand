@@ -49,7 +49,7 @@ class DockerService(BaseBackend):
             constraints.append("node.role == worker")
         self.client.services.create(
             settings.BOTHUB_NLP_NLU_WORKER_DOCKER_IMAGE_NAME
-            + f":{settings.BOTHUB_ENVIRONMENT}-{settings.BOTHUB_NLU_VERSION}-{queue_language}",
+            + f":{settings.BOTHUB_NLU_VERSION}-{queue_language}",
             [
                 "celery",
                 "worker",
