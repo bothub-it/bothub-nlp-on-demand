@@ -43,7 +43,7 @@ class DockerService(BaseBackend):
                 running_services[queue_name] = service
         return running_services
 
-    def apply_deploy(self, queue_language, queue_name):
+    def apply_deploy(self, queue_language, queue_name, queue_list):
         constraints = []
         if settings.BOTHUB_NLP_NLU_WORKER_ON_DEMAND_RUN_IN_WORKER_NODE:
             constraints.append("node.role == worker")
@@ -67,7 +67,7 @@ class DockerService(BaseBackend):
                 "INFO",
                 "-E",
                 "-Q",
-                queue_name,
+                queue_list,
             ],
             env=list(
                 list(filter(lambda v: not v.endswith(self.empty), self.environments))

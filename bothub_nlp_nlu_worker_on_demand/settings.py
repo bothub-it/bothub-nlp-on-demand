@@ -64,3 +64,10 @@ BOTHUB_K8S_TOLERATION_KEY = config(
 )
 
 BOTHUB_NLU_VERSION = config("BOTHUB_NLU_VERSION", default=None)
+
+
+BOTHUB_MULTILANGUAGES = {
+    "queue": ["pt_br", "en"],
+    "image": "multilanguage",
+    "service_name": "multi_language",
+}

@@ -55,7 +55,7 @@ class KubernetesService(BaseBackend):
                 running_services[queue_name] = service
         return running_services
 
-    def apply_deploy(self, queue_language, queue_name):
+    def apply_deploy(self, queue_language, queue_name, queue_list):
         with open(path.join(path.dirname(__file__), "bothub-nlu-worker.yaml")) as f:
             dep = yaml.safe_load(f)
             dep["metadata"][
@@ -115,7 +115,7 @@ class KubernetesService(BaseBackend):
                             "INFO",
                             "-E",
                             "-Q",
-                            queue_language,
+                            queue_list,
                         ]
                     }
                 )
