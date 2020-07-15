@@ -14,7 +14,7 @@ RUN apk update \
         python3-dev \
     && pip install --upgrade pip \
     && pip install -U pip setuptools \
-    && pip install pipenv==2018.11.26 redis \
+    && pip install pipenv redis \
     && pipenv install --system --deploy
 
 RUN pip install awscli
