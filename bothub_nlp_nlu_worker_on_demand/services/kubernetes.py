@@ -119,7 +119,10 @@ class KubernetesService(BaseBackend):
                         ]
                     }
                 )
-
+                if '-' in queue_name:
+                    model = queue_name.split('-')[-1]
+                else:
+                    model = None
                 container.update(
                     {
                         "env": list(
@@ -139,6 +142,9 @@ class KubernetesService(BaseBackend):
                             )
                             + list(
                                 [{"name": "BOTHUB_NLP_SERVICE_WORKER", "value": "true"}]
+                            )
+                            + list(
+                                [{"name": "BOTHUB_LANGUAGE_MODEL", "value": model}]
                             )
                         )
                     }
