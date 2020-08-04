@@ -115,6 +115,6 @@ BOTHUB_MULTILANGUAGES = {
         "ha",
         "ka",
     ],
-    "image": "multilanguage",
-    "service_name": "multi_language",
+    "image": "xx",
+    "service_name": "xx",
 }
