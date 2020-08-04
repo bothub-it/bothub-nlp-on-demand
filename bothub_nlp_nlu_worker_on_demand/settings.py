@@ -115,6 +115,6 @@ BOTHUB_MULTILANGUAGES = {
         "ha",
         "ka",
     ],
-    "image": "xx",
+    "image": "xx-SPACY",
     "service_name": "xx",
 }
