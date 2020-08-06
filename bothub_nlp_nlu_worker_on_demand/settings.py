@@ -253,6 +253,6 @@ BOTHUB_MULTILANGUAGES = {
         "za",
         "zu",
     ],
-    "image": "multilanguage",
-    "service_name": "multi_language",
+    "image": "xx-SPACY",
+    "service_name": "xx",
 }
