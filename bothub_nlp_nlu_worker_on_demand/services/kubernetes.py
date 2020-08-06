@@ -120,8 +120,11 @@ class KubernetesService(BaseBackend):
                     }
                 )
                 if '-' in queue_name:
-                    model = queue_name.split('-')[-1]
+                    temp = queue_name.split('-')
+                    lang = temp[0]
+                    model = temp[-1]
                 else:
+                    lang = queue_language
                     model = None
                 container.update(
                     {
@@ -136,7 +139,7 @@ class KubernetesService(BaseBackend):
                                 [
                                     {
                                         "name": "BOTHUB_NLP_LANGUAGE_QUEUE",
-                                        "value": queue_name,
+                                        "value": lang,
                                     }
                                 ]
                             )
