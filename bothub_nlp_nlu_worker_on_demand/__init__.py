@@ -29,15 +29,20 @@ class MyUpWorker(UpWorker):
     def run(self):
         global running_services
         services_lookup()
-        service = running_services.get(self.queue.name)
-        if not service:
+        if self.queue.name in settings.BOTHUB_MULTILANGUAGES.get("queue", []):
+            queue_name = settings.BOTHUB_MULTILANGUAGES.get("service_name")
+            queue_language = settings.BOTHUB_MULTILANGUAGES.get("image")
+            queue_list = ",".join(settings.BOTHUB_MULTILANGUAGES.get("queue", []))
+        else:
+            queue_name = self.queue.name
             queue_language = (
-                self.queue.name.split(":")[1]
-                if ":" in self.queue.name
-                else self.queue.name
+                queue_name.split(":")[1] if ":" in queue_name else queue_name
             )
+            queue_list = self.queue.name
+        service = running_services.get(queue_name)
+        if not service:
             settings.BOTHUB_SERVICE.connect_service()
-            settings.BOTHUB_SERVICE.apply_deploy(queue_language, self.queue.name)
+            settings.BOTHUB_SERVICE.apply_deploy(queue_language, queue_name, queue_list)
 
         while not self.queue.has_worker:
             sleep(1)
@@ -47,25 +52,35 @@ class MyDownWorker(DownWorker):
     def run(self):
         global running_services
         services_lookup()
-        service = running_services.get(self.queue.name)
+        if self.queue.name in settings.BOTHUB_MULTILANGUAGES.get("queue", []):
+            queue_name = settings.BOTHUB_MULTILANGUAGES.get("service_name")
+        else:
+            queue_name = self.queue.name
+        service = running_services.get(queue_name)
         if service:
             settings.BOTHUB_SERVICE.connect_service()
             settings.BOTHUB_SERVICE.remove_service(service)
-            running_services[self.queue.name] = None
+            running_services[queue_name] = None
 
 
 class MyAgent(Agent):
     def flag_down(self, queue):
         global running_services
         ignore_list = self.cwod.config.get("worker-down", "ignore").split(",")
-        if queue.name in ignore_list:
+
+        if queue.name in settings.BOTHUB_MULTILANGUAGES.get("queue", []):
+            queue_name = settings.BOTHUB_MULTILANGUAGES.get("service_name")
+        else:
+            queue_name = queue.name
+
+        if queue_name in ignore_list:
             return False
         if queue.size > 0:
             return False
         if not queue.has_worker:
             return False
         services_lookup()
-        service = running_services.get(queue.name)
+        service = running_services.get(queue_name)
         if not service:
             return False
         last_interaction = 0

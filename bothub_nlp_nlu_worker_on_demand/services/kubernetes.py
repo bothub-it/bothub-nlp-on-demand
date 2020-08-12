@@ -55,7 +55,7 @@ class KubernetesService(BaseBackend):
                 running_services[queue_name] = service
         return running_services
 
-    def apply_deploy(self, queue_language, queue_name):
+    def apply_deploy(self, queue_language, queue_name, queue_list):
         with open(path.join(path.dirname(__file__), "bothub-nlu-worker.yaml")) as f:
             dep = yaml.safe_load(f)
             dep["metadata"][
@@ -115,11 +115,17 @@ class KubernetesService(BaseBackend):
                             "INFO",
                             "-E",
                             "-Q",
-                            queue_language,
+                            queue_list,
                         ]
                     }
                 )
-
+                if '-' in queue_name:
+                    temp = queue_name.split('-')
+                    lang = temp[0]
+                    model = temp[-1]
+                else:
+                    lang = queue_language
+                    model = None
                 container.update(
                     {
                         "env": list(
@@ -133,12 +139,15 @@ class KubernetesService(BaseBackend):
                                 [
                                     {
                                         "name": "BOTHUB_NLP_LANGUAGE_QUEUE",
-                                        "value": queue_name,
+                                        "value": lang,
                                     }
                                 ]
                             )
                             + list(
                                 [{"name": "BOTHUB_NLP_SERVICE_WORKER", "value": "true"}]
+                            )
+                            + list(
+                                [{"name": "BOTHUB_LANGUAGE_MODEL", "value": model}]
                             )
                         )
                     }

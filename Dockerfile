@@ -12,8 +12,9 @@ RUN apk update \
         alpine-sdk \
         git \
         python3-dev \
-    && apk add --no-cache postgresql-dev \
-    && pip install pipenv redis \
+    && pip install --upgrade pip \
+    && pip install -U pip setuptools \
+    && pip install pipenv==2018.11.26 redis \
     && pipenv install --system --deploy
 
 RUN pip install awscli

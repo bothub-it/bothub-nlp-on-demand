@@ -43,10 +43,17 @@ class DockerService(BaseBackend):
                 running_services[queue_name] = service
         return running_services
 
-    def apply_deploy(self, queue_language, queue_name):
+    def apply_deploy(self, queue_language, queue_name, queue_list):
         constraints = []
         if settings.BOTHUB_NLP_NLU_WORKER_ON_DEMAND_RUN_IN_WORKER_NODE:
             constraints.append("node.role == worker")
+        if '-' in queue_name:
+            temp = queue_name.split('-')
+            lang = temp[0]
+            model = temp[-1]
+        else:
+            lang = queue_language
+            model = None
         self.client.services.create(
             settings.BOTHUB_NLP_NLU_WORKER_DOCKER_IMAGE_NAME
             + f":{settings.BOTHUB_NLU_VERSION}-{queue_language}",
@@ -67,12 +74,13 @@ class DockerService(BaseBackend):
                 "INFO",
                 "-E",
                 "-Q",
-                queue_name,
+                queue_list,
             ],
             env=list(
                 list(filter(lambda v: not v.endswith(self.empty), self.environments))
-                + list([f"BOTHUB_NLP_LANGUAGE_QUEUE={queue_name}"])
+                + list([f"BOTHUB_NLP_LANGUAGE_QUEUE={lang}"])
                 + list(["BOTHUB_NLP_SERVICE_WORKER=true"])
+                + list([f"BOTHUB_LANGUAGE_MODEL={model}"])
             ),
             labels={self.label_key: queue_name},
             networks=settings.BOTHUB_NLP_NLU_WORKER_ON_DEMAND_NETWORKS,
