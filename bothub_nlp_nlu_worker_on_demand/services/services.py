@@ -23,7 +23,7 @@ class BaseBackend(object):
         pass
 
     @abstractmethod
-    def apply_deploy(self, queue_language, queue_name):
+    def apply_deploy(self, queue_language, queue_name, queue_list):
         pass
 
     @abstractmethod
