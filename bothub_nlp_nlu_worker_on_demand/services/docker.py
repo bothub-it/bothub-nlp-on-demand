@@ -61,7 +61,7 @@ class DockerService(BaseBackend):
                 "celery",
                 "worker",
                 "--autoscale",
-                "5,3",
+                "5,3" if not model == 'BERT' else '5,5',
                 "-O",
                 "fair",
                 "--workdir",
