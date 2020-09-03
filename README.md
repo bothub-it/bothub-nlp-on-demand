@@ -65,6 +65,7 @@ You can set environment variables in your OS, write on ```.env``` file or pass v
 | BOTHUB_SERVICE | `str` | `docker` | Choose `kubernetes` or `docker` to boot on demand |
 | ENVIRONMENT | `str` | `production` | Choose `production` or `staging` |
 | BOTHUB_NLU_VERSION | `str` | `None` | Choose the version of the nlp worker, if you do not define a specific version, on-demand will work without versioning the docker images |
+| BOTHUB_NLU_CELERY_SCALE | `str` | `5,3` | Set the total workers of the celery auto scale |
 
 ## Docker Arguments
 

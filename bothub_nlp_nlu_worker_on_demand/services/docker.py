@@ -47,8 +47,8 @@ class DockerService(BaseBackend):
         constraints = []
         if settings.BOTHUB_NLP_NLU_WORKER_ON_DEMAND_RUN_IN_WORKER_NODE:
             constraints.append("node.role == worker")
-        if '-' in queue_name:
-            temp = queue_name.split('-')
+        if "-" in queue_name:
+            temp = queue_name.split("-")
             lang = temp[0]
             model = temp[-1]
         else:
@@ -61,7 +61,7 @@ class DockerService(BaseBackend):
                 "celery",
                 "worker",
                 "--autoscale",
-                "5,3" if not model == 'BERT' else '5,5',
+                str(settings.BOTHUB_NLU_CELERY_SCALE),
                 "-O",
                 "fair",
                 "--workdir",

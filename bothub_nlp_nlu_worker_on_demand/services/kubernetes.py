@@ -102,7 +102,7 @@ class KubernetesService(BaseBackend):
                             "celery",
                             "worker",
                             "--autoscale",
-                            "5,3",
+                            str(settings.BOTHUB_NLU_CELERY_SCALE),
                             "-O",
                             "fair",
                             "--workdir",
@@ -119,8 +119,8 @@ class KubernetesService(BaseBackend):
                         ]
                     }
                 )
-                if '-' in queue_name:
-                    temp = queue_name.split('-')
+                if "-" in queue_name:
+                    temp = queue_name.split("-")
                     lang = temp[0]
                     model = temp[-1]
                 else:
@@ -136,19 +136,12 @@ class KubernetesService(BaseBackend):
                                 )
                             )
                             + list(
-                                [
-                                    {
-                                        "name": "BOTHUB_NLP_LANGUAGE_QUEUE",
-                                        "value": lang,
-                                    }
-                                ]
+                                [{"name": "BOTHUB_NLP_LANGUAGE_QUEUE", "value": lang}]
                             )
                             + list(
                                 [{"name": "BOTHUB_NLP_SERVICE_WORKER", "value": "true"}]
                             )
-                            + list(
-                                [{"name": "BOTHUB_LANGUAGE_MODEL", "value": model}]
-                            )
+                            + list([{"name": "BOTHUB_LANGUAGE_MODEL", "value": model}])
                         )
                     }
                 )
