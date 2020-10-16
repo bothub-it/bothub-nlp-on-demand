@@ -66,9 +66,7 @@ BOTHUB_K8S_TOLERATION_KEY = config(
 BOTHUB_NLU_VERSION = config("BOTHUB_NLU_VERSION", default=None)
 BOTHUB_NLU_CELERY_SCALE = config("BOTHUB_NLU_CELERY_SCALE", default="5,3")
 
-
-BOTHUB_MULTILANGUAGES = {
-    "queue": [
+BOTHUB_MULTILANGUAGES =[
         "en",
         "de",
         "es",
@@ -253,7 +251,18 @@ BOTHUB_MULTILANGUAGES = {
         "yo",
         "za",
         "zu",
-    ],
+    ]
+
+BOTHUB_SPACY_MULTILANG = {
+    "queue": BOTHUB_MULTILANGUAGES,
     "image": "xx-SPACY",
-    "service_name": "xx",
+    "service_name": "xx-SPACY",
+}
+
+BOTHUB_BERT_MULTILANGUAGES = [(lang + '-BERT') for lang in BOTHUB_MULTILANGUAGES]
+
+BOTHUB_BERT_MULTILANG = {
+    "queue": BOTHUB_BERT_MULTILANGUAGES,
+    "image": "xx-BERT",
+    "service_name": "xx-BERT",
 }
