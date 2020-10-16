@@ -25,14 +25,25 @@ def services_lookup():
     return True
 
 
+def get_multilang(queue_name):
+    if queue_name in settings.BOTHUB_MULTILANGUAGES:
+        multilang = settings.BOTHUB_SPACY_MULTILANG
+    elif queue_name in settings.BOTHUB_BERT_MULTILANGUAGES:
+        multilang = settings.BOTHUB_BERT_MULTILANG
+    else:
+        multilang = None
+    return multilang
+
+
 class MyUpWorker(UpWorker):
     def run(self):
         global running_services
         services_lookup()
-        if self.queue.name in settings.BOTHUB_MULTILANGUAGES.get("queue", []):
-            queue_name = settings.BOTHUB_MULTILANGUAGES.get("service_name")
-            queue_language = settings.BOTHUB_MULTILANGUAGES.get("image")
-            queue_list = ",".join(settings.BOTHUB_MULTILANGUAGES.get("queue", []))
+        multilang = get_multilang(self.queue.name)
+        if multilang is not None:
+            queue_name = settings.multilang.get("service_name")
+            queue_language = settings.multilang.get("image")
+            queue_list = ",".join(settings.multilang.get("queue", []))
         else:
             queue_name = self.queue.name
             queue_language = (
@@ -52,8 +63,9 @@ class MyDownWorker(DownWorker):
     def run(self):
         global running_services
         services_lookup()
-        if self.queue.name in settings.BOTHUB_MULTILANGUAGES.get("queue", []):
-            queue_name = settings.BOTHUB_MULTILANGUAGES.get("service_name")
+        multilang = get_multilang(self.queue.name)
+        if multilang is not None:
+            queue_name = settings.multilang.get("service_name")
         else:
             queue_name = self.queue.name
         service = running_services.get(queue_name)
@@ -68,8 +80,9 @@ class MyAgent(Agent):
         global running_services
         ignore_list = self.cwod.config.get("worker-down", "ignore").split(",")
 
-        if queue.name in settings.BOTHUB_MULTILANGUAGES.get("queue", []):
-            queue_name = settings.BOTHUB_MULTILANGUAGES.get("service_name")
+        multilang = get_multilang(self.queue.name)
+        if multilang is not None:
+            queue_name = settings.multilang.get("service_name")
         else:
             queue_name = queue.name
 
