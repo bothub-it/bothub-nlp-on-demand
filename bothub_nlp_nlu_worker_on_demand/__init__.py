@@ -41,9 +41,9 @@ class MyUpWorker(UpWorker):
         services_lookup()
         multilang = get_multilang(self.queue.name)
         if multilang is not None:
-            queue_name = settings.multilang.get("service_name")
-            queue_language = settings.multilang.get("image")
-            queue_list = ",".join(settings.multilang.get("queue", []))
+            queue_name = multilang.get("service_name")
+            queue_language = multilang.get("image")
+            queue_list = ",".join(multilang.get("queue", []))
         else:
             queue_name = self.queue.name
             queue_language = (
@@ -65,7 +65,7 @@ class MyDownWorker(DownWorker):
         services_lookup()
         multilang = get_multilang(self.queue.name)
         if multilang is not None:
-            queue_name = settings.multilang.get("service_name")
+            queue_name = multilang.get("service_name")
         else:
             queue_name = self.queue.name
         service = running_services.get(queue_name)
@@ -82,7 +82,7 @@ class MyAgent(Agent):
 
         multilang = get_multilang(self.queue.name)
         if multilang is not None:
-            queue_name = settings.multilang.get("service_name")
+            queue_name = multilang.get("service_name")
         else:
             queue_name = queue.name
 
